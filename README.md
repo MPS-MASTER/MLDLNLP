@@ -1,2 +1,2 @@
 # MLDLNLP
-Projects Related TO ML, DL and NLP
+Projects Related to ML, DL and NLP
