@@ -22,4 +22,5 @@ yt= mu(constant) + (phi1*yt-1+.....+phip*yt-p) - (theta1*et-1-.....-thetaq*et-q)
 # plot_pacf : plot to find P(Auto regression lag) degree of correlation
 
 # plot_acf  : plot to find q(forcast lag) 
+#
 
