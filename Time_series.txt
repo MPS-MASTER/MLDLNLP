@@ -1,0 +1,25 @@
+#1  What is time series data??
+Ans : When data is strongly corelated to itself, Means data should be periodic and todays 
+      data is correlated to yesterday's data is periodicity is 24 hours
+
+#2 Arima : Auto regressive integrated moving average
+#3 P,D,Q
+
+#P = Auto regressive = Lags of the standerised series(no of lag terms)
+#Q = Moving Average = Lags of the forcast(No of lag terms)
+#D = If serires is not stationary means its not periodic then we make it stationary using D,
+ We want to seperate out long term pattern from short term pattern(No of times the raw observation is differenced)
+
+
+
+yt= mu(constant) + (phi1*yt-1+.....+phip*yt-p) - (theta1*et-1-.....-thetaq*et-q)
+
+
+
+# Adfuller test : It is used to check if dataset is stationary or not
+ It gives p-value if that is less than .05 then data is stationary so d = 0 , we dont need differencing
+
+# plot_pacf : plot to find P(Auto regression lag) degree of correlation
+
+# plot_acf  : plot to find q(forcast lag) 
+

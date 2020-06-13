@@ -12,6 +12,7 @@ import numpy as np
 import random
 random.seed(10)
 import matplotlib.pyplot as plt
+import math
 #%matplotlib inline
 
 # ----------------------------------------------------------------------------
@@ -19,6 +20,11 @@ import matplotlib.pyplot as plt
 def equation_line(x,m=11,c=11):
     y = m*x+c
     return y
+
+def logistic_equation(x,m=11,c=11):
+    y = m*x+c
+    y_new = 1/(1+math.exp(-y))
+    return y_new
 
 def absolute_error(original_y, calculated_y):
     """
@@ -33,6 +39,13 @@ def absolute_error(original_y, calculated_y):
     #print("abs_err", abs_err)
     return abs_err
 
+def cross_entropy(y_log, y_org):
+    
+    # Dot product is matrix multiplication and normal multiplication is elementwise
+    
+    log_err= np.sum(y_org*math.log(y_log, 10)-(1-y_org)*(log((1-y_log),10)))
+    return log_err
+    
 def sse_error(original_y, calculated_y):
     """
     1.this gives sum of sqaured error and those are pretty big 
@@ -93,16 +106,28 @@ def linear_reg(train_x, train_y, learning_rate = 0.001):
     print("total_learning", total_learning)
       
     """
+    previous_loss = np.Inf
     slope = 150
     intercept =150
     previous_slope = 0
     previous_intercept = 0
-    no_of_iterations =5000
+    no_of_iterations =10000
     errors =[]
     for i in range(no_of_iterations):
+        print("iteration no:",i, previous_loss)
     #flag = True
         previous_slope = slope
         previous_intercept =intercept
+ #=============================================================================
+# =============================================================================
+#         train_len = len(train_x)/5
+#          
+#         for j in range(5):
+#             ini = j*train_len
+#             endd = (j+1)*train_len
+#             train_x_new = train_x.iloc[int(ini) : int(endd)]
+# =============================================================================
+ #=============================================================================
         y_cal = equation_line(train_x, previous_slope,previous_intercept)
         
         slope = change_in_slope(learning_rate,train_y,y_cal, train_x)
@@ -113,12 +138,82 @@ def linear_reg(train_x, train_y, learning_rate = 0.001):
         res_abs = absolute_error(train_y, y_cal)
         res_sse = sse_error(train_y, y_cal)
         res_rmse = rmse_error(train_y, y_cal)
+        if(no_of_iterations%10 ==0):
+            
+            if(previous_loss<res_rmse or previous_loss-res_rmse<0.001):
+                return  slope, intercept
+            previous_loss = res_rmse
+        
         errors.append([i,res_rmse])
         #result_freq = res.value_counts()
         #print("abs_error",res_abs, ", sse_error",res_sse, ", rmse_error",res_rmse)
         #print("slope",slope,"intercept",intercept)
         if(i==no_of_iterations-1):
             return  slope, intercept
+        
+        
+def logestic_reg(train_x, train_y, learning_rate = 0.001):
+    """
+    train_x, test_x, train_y, test_y 
+    
+    slop, inter = linear_reg(train_x, train_y)
+    
+    y_predicted = predicted_values(test_x, slop, inter)
+    
+    scatter_plot_actual_vs_predicted(test_x, test_y, y_predicted)
+    
+    rmse_val = rmse_error(test_y, y_predicted)
+    
+    total_learning = {"slope":slop, "intercept" : inter,"root_mean_square_error":rmse_val}
+    
+    print("total_learning", total_learning)
+      
+    """
+    previous_loss = np.Inf
+    slope = 150
+    intercept =150
+    previous_slope = 0
+    previous_intercept = 0
+    no_of_iterations =10000
+    errors =[]
+    for i in range(no_of_iterations):
+        print("iteration no:",i, previous_loss)
+    #flag = True
+        previous_slope = slope
+        previous_intercept =intercept
+ #=============================================================================
+# =============================================================================
+#         train_len = len(train_x)/5
+#          
+#         for j in range(5):
+#             ini = j*train_len
+#             endd = (j+1)*train_len
+#             train_x_new = train_x.iloc[int(ini) : int(endd)]
+# =============================================================================
+ #=============================================================================
+        y_cal = logistic_equation(train_x, previous_slope,previous_intercept)
+        
+        slope = change_in_slope(learning_rate,train_y,y_cal, train_x)
+        intercept = change_in_intercept(learning_rate,train_y,y_cal, train_x)
+        slope = previous_slope+slope
+        intercept = previous_intercept +intercept
+        #print(y_cal)
+        cross_entropy_err = cross_entropy(y_cal, train_y)
+        
+        
+        if(no_of_iterations%10 ==0):
+            
+            if(previous_loss<cross_entropy_err and previous_loss-cross_entropy_err<0.001):
+                return  slope, intercept
+            previous_loss = res_rmse
+        
+        errors.append([i,cross_entropy_err])
+        #result_freq = res.value_counts()
+        #print("abs_error",res_abs, ", sse_error",res_sse, ", rmse_error",res_rmse)
+        #print("slope",slope,"intercept",intercept)
+        if(i==no_of_iterations-1):
+            return  slope, intercept
+        
 
 if __name__ =='__main__':
     
