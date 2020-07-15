@@ -249,6 +249,8 @@ print(" class 1 percentage : ", 100*492/284807)
 ```python
 import seaborn as sns
 sns.countplot(data.Class)
+Import Image
+Image.open('../images/Blog_CVAE_CREDIT_FRAUD_files/output_24_1.png')
 ```
 
 
